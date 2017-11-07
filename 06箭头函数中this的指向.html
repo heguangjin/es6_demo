@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>06箭头函数中this的指向</title>
+</head>
+
+<body>
+  <button id="btn">点我</button>
+  <script>
+  function Person(name, age) {
+    this.name = name
+    this.age = age
+  }
+
+  Person.prototype.sayAge = function() {
+    // 定时器内部的 this 指向了 window
+    // setTimeout(function() {
+    //   console.log(this.age)
+    // }, 1000)
+
+    // var that = this
+    // setTimeout(function() {
+    //   console.log(that.age)
+    // }, 1000)
+
+    var handler = function() {
+      console.log(this.age)
+    }
+
+    // bind 方法是得到一个内部修改了指定 this 指向的新的函数
+    // bind 和 call、apply 最大的区别是改变指向不调用
+    // 而 call、apply 是改变指向的同时立刻调用
+    // var newHandle = handler.bind(this)
+
+    var obj = {
+      age: 12
+    }
+
+    // function Fn() {
+
+    // }
+
+    // Fn.age = 17
+
+    // var newHandle = handler.bind(Fn)
+
+    // setTimeout(newHandle, 1000)
+
+    // 任何箭头函数都会默认自动的 .bind(this)
+    setTimeout(() => {
+      console.log(this.age)
+    }, 1000)
+
+    // 箭头函数已经默认 bind(this) 了，手动 bind 无效
+    // setTimeout((() => {
+    //   console.log(this.age)
+    // }).bind(obj), 1000)
+
+    // setTimeout(function () {
+    //   console.log(this.age)
+    // }.bind(this), 1000)
+  }
+
+  new Person('张三', 18).sayAge()
+
+  var foo = 'bar'
+
+  // 全局，在这里无论是 function 还是 箭头函数，内部 this 都是 window
+  setTimeout(() => {
+    console.log(this.foo)
+  }, 1000)
+
+  // document.querySelector('#btn').onclick = function () {
+  //   console.log(this)
+  // }
+
+
+
+  // document.querySelector('#btn').onclick = function () {
+  //   console.log(this)
+  // }.bind(this)
+
+
+  // 等价于上面代码的效果
+  document.querySelector('#btn').onclick = () => {
+    console.log(this)
+  }
+  </script>
+</body>
+
+</html>
